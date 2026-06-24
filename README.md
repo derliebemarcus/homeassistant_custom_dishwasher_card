@@ -14,6 +14,10 @@ A standalone Home Assistant dashboard card for Home Connect dishwashers.
 - German and English labels
 - No frontend-card dependencies
 
+## Compatibility
+
+This card has been tested with a **Siemens iQ300 dishwasher** using the Home Connect integration. It should also work with other Home Connect dishwashers that expose the corresponding standard entities. Available controls and status fields depend on the capabilities and enabled entities of the individual appliance.
+
 ## Installation
 
 ### HACS
