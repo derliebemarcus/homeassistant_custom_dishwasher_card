@@ -1,0 +1,16 @@
+{
+  "name": "homeassistant_custom_dishwasher_card",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A standalone Home Assistant card for Home Connect dishwashers.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node --check src/homeassistant_custom_dishwasher_card.js && node --check dist/homeassistant_custom_dishwasher_card.js",
+    "test": "npm run check && node tests/validate.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
