@@ -9,7 +9,7 @@ const packageJson = JSON.parse(await readFile("package.json", "utf8"));
 assert.equal(distribution, source, "dist file must match the source build");
 assert.equal(manifest.name, "Home Connect Dishwasher Card");
 assert.equal(manifest.filename, "homeassistant_custom_dishwasher_card.js");
-assert.equal(packageJson.version, "0.1.0");
+assert.equal(packageJson.version, "0.1.1");
 
 for (const expected of [
   'customElements.define("dishwasher-card"',
