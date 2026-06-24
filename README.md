@@ -91,7 +91,7 @@ npm run build
 
 1. Update `CHANGELOG.md` and the version in `package.json`.
 2. Run the Jenkins and GitHub Actions validation pipelines.
-3. Run the **Release** workflow with a semantic version such as `v0.2.0`.
+3. Merge the validated version to `main`; the release workflow automatically creates the matching `v<version>` GitHub release and attaches the HACS JavaScript bundle.
 4. Confirm that the HACS validation workflow passes against the release.
 
 ## Support
