@@ -1,0 +1,46 @@
+name: Bug report
+description: Report a reproducible problem with the dishwasher card
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for reporting a problem. Remove sensitive data before submitting.
+  - type: input
+    id: card-version
+    attributes:
+      label: Card version
+      placeholder: v0.1.0
+    validations:
+      required: true
+  - type: input
+    id: home-assistant-version
+    attributes:
+      label: Home Assistant version
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+    validations:
+      required: true
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Card configuration
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem description and reproduction steps
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Browser console output
+      render: text
