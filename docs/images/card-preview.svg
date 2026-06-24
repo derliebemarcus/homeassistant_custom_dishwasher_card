@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title description">
+  <title id="title">Home Connect Dishwasher Card preview</title>
+  <description id="description">A dark Home Assistant card showing a running dishwasher, progress, programme and controls.</description>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#1f2937"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" rx="32" fill="#0b1020"/>
+  <rect x="80" y="48" width="800" height="444" rx="28" fill="url(#bg)" stroke="#374151" stroke-width="2"/>
+  <text x="124" y="102" fill="#f9fafb" font-family="Arial, sans-serif" font-size="28" font-weight="700">Geschirrspüler</text>
+  <text x="124" y="132" fill="#9ca3af" font-family="Arial, sans-serif" font-size="18">Auto</text>
+  <rect x="720" y="76" width="112" height="38" rx="19" fill="#163c2b"/>
+  <circle cx="744" cy="95" r="5" fill="#4ade80"/>
+  <text x="758" y="101" fill="#86efac" font-family="Arial, sans-serif" font-size="16">Online</text>
+  <circle cx="270" cy="270" r="104" fill="none" stroke="#374151" stroke-width="12"/>
+  <circle cx="270" cy="270" r="104" fill="none" stroke="#38bdf8" stroke-width="12" stroke-linecap="round" stroke-dasharray="653" stroke-dashoffset="176" transform="rotate(-90 270 270)"/>
+  <rect x="216" y="216" width="108" height="108" rx="28" fill="#182235" stroke="#475569"/>
+  <rect x="232" y="232" width="76" height="76" rx="12" fill="#23304a"/>
+  <circle cx="250" cy="254" r="5" fill="#38bdf8"/>
+  <path d="M244 278h52M244 289h52" stroke="#7dd3fc" stroke-width="5" stroke-linecap="round"/>
+  <rect x="226" y="353" width="88" height="34" rx="17" fill="#111827"/>
+  <text x="244" y="376" fill="#f9fafb" font-family="Arial, sans-serif" font-size="20" font-weight="700">73%</text>
+  <text x="420" y="218" fill="#4ade80" font-family="Arial, sans-serif" font-size="38" font-weight="700">Läuft</text>
+  <text x="420" y="252" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="22">Auto</text>
+  <text x="420" y="304" fill="#94a3b8" font-family="Arial, sans-serif" font-size="15">FERTIG</text>
+  <text x="420" y="330" fill="#f8fafc" font-family="Arial, sans-serif" font-size="22">21:42</text>
+  <text x="585" y="304" fill="#94a3b8" font-family="Arial, sans-serif" font-size="15">TÜR</text>
+  <text x="585" y="330" fill="#f8fafc" font-family="Arial, sans-serif" font-size="22">Verriegelt</text>
+  <rect x="420" y="370" width="140" height="44" rx="22" fill="#163c2b"/>
+  <text x="446" y="398" fill="#86efac" font-family="Arial, sans-serif" font-size="16">Fernstart</text>
+  <rect x="574" y="370" width="160" height="44" rx="22" fill="#202b3d"/>
+  <text x="600" y="398" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="16">Tür verriegelt</text>
+</svg>
