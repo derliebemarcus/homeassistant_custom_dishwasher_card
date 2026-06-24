@@ -1,6 +1,6 @@
 # Home Connect Dishwasher Card
 
-A standalone Home Assistant dashboard card for Home Connect dishwashers.
+A standalone Home Assistant dashboard card for [Home Connect](https://www.home-assistant.io/integrations/home_connect/) dishwashers.
 
 
 <picture>
@@ -77,7 +77,7 @@ program_names:
 
 ## Requirements
 
-- Home Assistant with the Home Connect integration configured
+- Home Assistant with the [Home Connect](https://www.home-assistant.io/integrations/home_connect/) integration configured
 - The relevant entities must be enabled in the entity registry
 
 ## Development
