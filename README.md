@@ -1,8 +1,11 @@
 # Home Connect Dishwasher Card
 
-A standalone Home Assistant dashboard card for Home Connect dishwashers.
+A standalone Home Assistant dashboard card for [Home Connect](https://www.home-assistant.io/integrations/home_connect/) dishwashers.
 
-![Dishwasher card preview](docs/images/card-preview.png)
+
+<picture>
+  <img src="docs/images/card-preview.png" height="600" alt="Dishwasher card preview" />
+</picture>
 
 ## Features
 
@@ -74,7 +77,7 @@ program_names:
 
 ## Requirements
 
-- Home Assistant with the Home Connect integration configured
+- Home Assistant with the [Home Connect](https://www.home-assistant.io/integrations/home_connect/) integration configured
 - The relevant entities must be enabled in the entity registry
 
 ## Development
@@ -91,7 +94,7 @@ npm run build
 
 1. Update `CHANGELOG.md` and the version in `package.json`.
 2. Run the Jenkins and GitHub Actions validation pipelines.
-3. Merge the validated version to `main`; the release workflow automatically creates the matching `v<version>` GitHub release and attaches the HACS JavaScript bundle.
+3. Run the **Release** workflow with a semantic version such as `v0.2.0`.
 4. Confirm that the HACS validation workflow passes against the release.
 
 ## Support
