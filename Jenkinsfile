@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  tools {
+    nodejs '24'
+  }
+
   options {
     ansiColor('xterm')
   }
