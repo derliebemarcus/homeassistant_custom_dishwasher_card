@@ -1,11 +1,14 @@
 name: Release
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       version:
-        description: Semantic version tag, for example v0.1.0
-        required: true
+        description: Optional semantic version tag, for example v0.2.0
+        required: false
         type: string
 
 permissions:
@@ -27,16 +30,22 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
-      - name: Validate requested version
+      - name: Resolve release version
+        id: version
         env:
-          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_VERSION: ${{ github.event.inputs.version }}
         run: |
           set -euo pipefail
           PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+          VERSION="${REQUESTED_VERSION:-v$PACKAGE_VERSION}"
           test "$VERSION" = "v$PACKAGE_VERSION"
-          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" >/dev/null 2>&1; then
-            echo "Tag $VERSION already exists" >&2
-            exit 1
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "create=false" >> "$GITHUB_OUTPUT"
+            echo "Release $VERSION already exists"
+          else
+            echo "create=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Test and build
@@ -46,9 +55,10 @@ jobs:
           git diff --exit-code -- dist/
 
       - name: Create GitHub release
+        if: steps.version.outputs.create == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ inputs.version }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           gh release create "$VERSION" \
             dist/homeassistant_custom_dishwasher_card.js \
