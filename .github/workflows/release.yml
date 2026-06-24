@@ -34,10 +34,10 @@ jobs:
           set -euo pipefail
           PACKAGE_VERSION="$(node -p "require('./package.json').version")"
           test "$VERSION" = "v$PACKAGE_VERSION"
-          git ls-remote --exit-code --tags origin "refs/tags/$VERSION" && {
+          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" >/dev/null 2>&1; then
             echo "Tag $VERSION already exists" >&2
             exit 1
-          } || true
+          fi
 
       - name: Test and build
         run: |
