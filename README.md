@@ -2,7 +2,7 @@
 
 A standalone Home Assistant dashboard card for Home Connect dishwashers.
 
-![Dishwasher card preview](docs/images/card-preview.svg)
+![Dishwasher card preview](docs/images/card-preview.png)
 
 ## Features
 
