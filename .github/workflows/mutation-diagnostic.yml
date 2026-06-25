@@ -1,0 +1,22 @@
+name: Mutation diagnostic
+
+on:
+  push:
+    branches:
+      - feat/card-quality-gate
+
+permissions:
+  contents: read
+
+jobs:
+  mutation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: mkdir -p reports/mutation
+      - run: npm run test:mutation
