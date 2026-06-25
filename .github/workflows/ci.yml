@@ -29,6 +29,9 @@ jobs:
           npm run check
           node tests/validate.mjs
 
+      - name: Run unit tests
+        run: npm run test:unit
+
       - name: Rebuild distribution
         run: npm run build
 
