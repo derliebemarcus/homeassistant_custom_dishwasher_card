@@ -1,9 +1,7 @@
 name: Mutation diagnostic
 
 on:
-  push:
-    branches:
-      - feat/card-quality-gate
+  pull_request:
 
 permissions:
   contents: read
