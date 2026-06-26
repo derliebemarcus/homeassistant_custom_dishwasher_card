@@ -26,6 +26,7 @@ for (const expected of [
   'set_value',
   'window.confirm',
   'prefers-reduced-motion',
+  'getEntitySuggestion',
 ]) {
   assert.ok(source.includes(expected), `missing required feature: ${expected}`);
 }
