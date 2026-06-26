@@ -366,7 +366,7 @@ class DishwasherCard extends HTMLElement {
     this.shadowRoot.querySelectorAll("[data-delay]").forEach((element) => element.addEventListener("click", () => this._service("number", "set_value", { entity_id: this._entities.delay, value: Number(element.dataset.delay) })));
     this.shadowRoot.querySelector('[data-action="power"]')?.addEventListener("click", () => this._service("switch", "turn_on", { entity_id: this._entities.power }));
     this.shadowRoot.querySelector('[data-action="stop"]')?.addEventListener("click", () => {
-      if (window.confirm(this._text.confirm)) this._service("button", "press", { entity_id: this._entities.stop });
+      if (globalThis.confirm(this._text.confirm)) this._service("button", "press", { entity_id: this._entities.stop });
     });
     this.shadowRoot.getElementById("program")?.addEventListener("change", (event) => this._service("select", "select_option", { entity_id: this._entities.selectedProgram, option: event.target.value }));
   }
@@ -397,14 +397,14 @@ class DishwasherCard extends HTMLElement {
 }
 
 if (!customElements.get("dishwasher-card")) customElements.define("dishwasher-card", DishwasherCard);
-window.customCards = window.customCards || [];
+globalThis.customCards = globalThis.customCards || [];
 const matchesEntity = (entity, terms) => {
   const entityId = String(entity?.entity_id || entity || "").toLowerCase();
   const name = String(entity?.attributes?.friendly_name || entity?.name || "").toLowerCase();
   return terms.some((term) => entityId.includes(term) || name.includes(term));
 };
 
-window.customCards.push({
+globalThis.customCards.push({
   type: "dishwasher-card",
   name: "Home Connect Dishwasher Card",
   description: "Home Connect dishwasher control card",

@@ -24,7 +24,7 @@ for (const expected of [
   '_program_progress',
   'select_option',
   'set_value',
-  'window.confirm',
+  'globalThis.confirm',
   'prefers-reduced-motion',
   'getEntitySuggestion',
 ]) {
