@@ -398,5 +398,18 @@ class DishwasherCard extends HTMLElement {
 
 if (!customElements.get("dishwasher-card")) customElements.define("dishwasher-card", DishwasherCard);
 window.customCards = window.customCards || [];
-window.customCards.push({ type: "dishwasher-card", name: "Home Connect Dishwasher Card", description: "Home Connect dishwasher control card", preview: true });
+const matchesEntity = (entity, terms) => {
+  const entityId = String(entity?.entity_id || entity || "").toLowerCase();
+  const name = String(entity?.attributes?.friendly_name || entity?.name || "").toLowerCase();
+  return terms.some((term) => entityId.includes(term) || name.includes(term));
+};
+
+window.customCards.push({
+  type: "dishwasher-card",
+  name: "Home Connect Dishwasher Card",
+  description: "Home Connect dishwasher control card",
+  preview: true,
+  getEntitySuggestion: (entity) =>
+    matchesEntity(entity, ["dishwasher", "geschirrspuler", "geschirrspüler", "dishcare_dishwasher"]),
+});
 console.info(`%c DISHWASHER-CARD %c ${VERSION} `, "color:#fff;background:#1976d2;font-weight:700", "color:#1976d2;background:#fff;font-weight:700");
