@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.3.0](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.2.0...v0.3.0) (2026-06-27)
+
+
+### Features
+
+* add Home Assistant card picker suggestions ([#14](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/issues/14)) ([f771ac2](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/f771ac28bcc6c578addc90ab4dbc97035fac1891))
+
 ## [0.2.0](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.1.2...v0.2.0) (2026-06-26)
 
 
