@@ -27,6 +27,7 @@ for (const expected of [
   'globalThis.confirm',
   'prefers-reduced-motion',
   'getEntitySuggestion',
+  'globalThis.customCards',
 ]) {
   assert.ok(source.includes(expected), `missing required feature: ${expected}`);
 }

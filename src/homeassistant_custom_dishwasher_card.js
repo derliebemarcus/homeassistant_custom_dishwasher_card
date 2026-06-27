@@ -409,7 +409,14 @@ globalThis.customCards.push({
   name: "Home Connect Dishwasher Card",
   description: "Home Connect dishwasher control card",
   preview: true,
-  getEntitySuggestion: (entity) =>
-    matchesEntity(entity, ["dishwasher", "geschirrspuler", "geschirrspüler", "dishcare_dishwasher"]),
+  getEntitySuggestion: (hass, entityId) => {
+    if (!matchesEntity(hass.states?.[entityId], ["dishwasher", "geschirrspuler", "geschirrspüler", "dishcare_dishwasher"])) return null;
+    return {
+      config: {
+        type: "custom:dishwasher-card",
+        entity: entityId,
+      },
+    };
+  },
 });
 console.info(`%c DISHWASHER-CARD %c ${VERSION} `, "color:#fff;background:#1976d2;font-weight:700", "color:#1976d2;background:#fff;font-weight:700");
