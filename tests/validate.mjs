@@ -24,9 +24,10 @@ for (const expected of [
   '_program_progress',
   'select_option',
   'set_value',
-  'window.confirm',
+  'globalThis.confirm',
   'prefers-reduced-motion',
   'getEntitySuggestion',
+  'globalThis.customCards',
 ]) {
   assert.ok(source.includes(expected), `missing required feature: ${expected}`);
 }
