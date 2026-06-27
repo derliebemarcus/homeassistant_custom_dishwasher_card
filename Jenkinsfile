@@ -6,16 +6,10 @@ pipeline {
   }
 
   options {
-    ansiColor('xterm')
+    disableConcurrentBuilds()
   }
 
   stages {
-    stage('Checkout') {
-      steps {
-        checkout scm
-      }
-    }
-
     stage('Environment') {
       steps {
         sh '''
@@ -28,30 +22,131 @@ pipeline {
 
     stage('Install') {
       steps {
-        sh 'npm ci --ignore-scripts'
-      }
-    }
-
-    stage('Validate') {
-      steps {
-        sh 'npm test'
-      }
-    }
-
-    stage('Build') {
-      steps {
         sh '''
           set -euo pipefail
-          npm run build
-          git diff --exit-code -- dist/
+          mkdir -p .ci coverage reports/junit reports/mutation
+          npm ci --ignore-scripts
         '''
+      }
+    }
+
+    stage('Validate and Package') {
+      steps {
+        script {
+          int exitCode = sh(
+            returnStatus: true,
+            script: '''
+              set -o pipefail
+              npm run check &&
+              node tests/validate.mjs &&
+              npm run build &&
+              git diff --exit-code -- dist/
+            '''
+          )
+          writeFile file: '.ci/validate.exit', text: "${exitCode}\n"
+          if (exitCode != 0) {
+            catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE', message: 'Validation or package verification failed') {
+              error('Validation or package verification failed')
+            }
+          }
+        }
+      }
+    }
+
+    stage('Unit Tests and Coverage') {
+      steps {
+        script {
+          int exitCode = sh(returnStatus: true, script: 'npm run test:coverage')
+          writeFile file: '.ci/unit-tests.exit', text: "${exitCode}\n"
+          if (exitCode != 0) {
+            catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE', message: 'Unit tests or coverage generation failed') {
+              error('Unit tests or coverage generation failed')
+            }
+          }
+        }
+      }
+      post {
+        always {
+          junit(testResults: 'reports/junit/*.xml', allowEmptyResults: true, skipMarkingBuildUnstable: true)
+          archiveArtifacts(artifacts: 'coverage/**,reports/junit/**', allowEmptyArchive: true)
+        }
+      }
+    }
+
+    stage('Mutation Tests') {
+      steps {
+        script {
+          int exitCode = sh(returnStatus: true, script: 'npm run test:mutation')
+          writeFile file: '.ci/mutation.exit', text: "${exitCode}\n"
+          if (exitCode != 0) {
+            catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE', message: 'Mutation threshold not reached') {
+              error('Mutation threshold not reached')
+            }
+          }
+        }
+      }
+      post {
+        always {
+          archiveArtifacts(artifacts: 'reports/mutation/**', allowEmptyArchive: true)
+        }
+      }
+    }
+
+    stage('SonarQube') {
+      steps {
+        script {
+          int exitCode
+          withSonarQubeEnv('SonarQube') {
+            exitCode = sh(
+              returnStatus: true,
+              script: '''
+                npm exec --yes --package=@sonar/scan@4.3.5 -- sonar \
+                  -Dsonar.host.url="${SONAR_HOST_URL}" \
+                  -Dsonar.token="${SONAR_AUTH_TOKEN}"
+              '''
+            )
+          }
+          writeFile file: '.ci/sonarqube.exit', text: "${exitCode}\n"
+          if (exitCode != 0) {
+            catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE', message: 'SonarQube analysis submission failed') {
+              error('SonarQube analysis submission failed')
+            }
+          }
+        }
+      }
+    }
+
+    stage('Quality Gate') {
+      steps {
+        timeout(time: 10, unit: 'MINUTES') {
+          script {
+            List<String> failures = []
+            int validateExit = readFile('.ci/validate.exit').trim() as int
+            int unitExit = readFile('.ci/unit-tests.exit').trim() as int
+            int mutationExit = readFile('.ci/mutation.exit').trim() as int
+            int sonarExit = readFile('.ci/sonarqube.exit').trim() as int
+
+            if (validateExit != 0) failures << 'Validation/package verification'
+            if (unitExit != 0) failures << 'Unit tests/coverage'
+            if (mutationExit != 0) failures << 'Mutation threshold'
+
+            if (sonarExit != 0) {
+              failures << 'SonarQube analysis submission'
+            } else {
+              def qualityGate = waitForQualityGate abortPipeline: false
+              if (qualityGate.status != 'OK') failures << "SonarQube Quality Gate: ${qualityGate.status}"
+            }
+
+            if (!failures.isEmpty()) error('Quality Gate failed:\n- ' + failures.join('\n- '))
+          }
+        }
       }
     }
   }
 
   post {
     always {
-      archiveArtifacts artifacts: 'dist/*.js,hacs.json,package.json', fingerprint: true
+      archiveArtifacts(artifacts: '.ci/**,coverage/**,reports/**,dist/*.js,hacs.json,package.json,sonar-project.properties', allowEmptyArchive: true, fingerprint: true)
       deleteDir()
     }
   }
