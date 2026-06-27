@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.4.0](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.3.0...v0.4.0) (2026-06-27)
+
+
+### Features
+
+* **ci:** add Jenkins card quality gate ([#9](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/issues/9)) ([8cbf096](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/8cbf09629d6ecda19cf18029b07893fddcd09832))
+
 ## [0.3.0](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.2.0...v0.3.0) (2026-06-27)
 
 
