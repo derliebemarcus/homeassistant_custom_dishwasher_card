@@ -1,4 +1,5 @@
 {
   "name": "Home Connect Dishwasher Card",
-  "filename": "homeassistant_custom_dishwasher_card.js"
+  "filename": "homeassistant_custom_dishwasher_card.js",
+  "homeassistant": "2026.6.0"
 }
