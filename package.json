@@ -10,7 +10,10 @@
     "test": "npm run check && node tests/validate.mjs && npm run test:unit",
     "test:unit": "node --test tests/unit/*.test.mjs",
     "test:coverage": "node --test --experimental-test-coverage --test-coverage-include='src/**/*.js' --test-coverage-lines=81 --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=reports/junit/unit-tests.xml --test-reporter=lcov --test-reporter-destination=coverage/lcov.info",
-    "test:mutation": "npm exec --yes --package=@stryker-mutator/core@9.6.1 -- stryker run"
+    "test:mutation": "stryker run"
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "9.6.1"
   },
   "engines": {
     "node": ">=24"
