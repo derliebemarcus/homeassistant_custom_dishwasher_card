@@ -1,65 +1,52 @@
-name: Release
+name: Publish Release
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*"
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to repair or republish, for example v1.2.3
+        required: true
+        type: string
 
 permissions:
   contents: write
-  issues: write
-  pull-requests: write
+  actions: read
+  statuses: read
+
+concurrency:
+  group: publish-release-${{ github.event.inputs.tag || github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Require release token
-        env:
-          RELEASE_PLEASE_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+      - name: Resolve target tag
+        id: tag
         shell: bash
         run: |
-          test -n "$RELEASE_PLEASE_TOKEN" || {
-            echo "RELEASE_PLEASE_TOKEN is not configured."
-            exit 1
-          }
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            tag="${{ inputs.tag }}"
+          else
+            tag="$GITHUB_REF_NAME"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
-      - name: Create or update release PR
-        id: release
-        uses: googleapis/release-please-action@v5
-        with:
-          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
-          config-file: release-please-config.json
-          manifest-file: .release-please-manifest.json
-
-      - name: Check out released revision
-        if: steps.release.outputs.release_created == 'true'
+      - name: Check out tagged revision
         uses: actions/checkout@v7
         with:
-          ref: ${{ steps.release.outputs.tag_name }}
+          fetch-depth: 0
+          ref: ${{ steps.tag.outputs.tag }}
 
       - name: Set up Node.js
-        if: steps.release.outputs.release_created == 'true'
         uses: actions/setup-node@v6
         with:
           node-version: "24"
-          cache: npm
 
-      - name: Test and build release asset
-        if: steps.release.outputs.release_created == 'true'
-        run: |
-          npm ci --ignore-scripts
-          npm test
-          npm run build
-          git diff --exit-code -- dist/
-
-      - name: Upload card asset
-        if: steps.release.outputs.release_created == 'true'
+      - name: Validate, wait for checks, and publish
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG_NAME: ${{ steps.release.outputs.tag_name }}
-        run: |
-          gh release upload "$TAG_NAME" \
-            dist/homeassistant_custom_dishwasher_card.js \
-            --clobber
+        run: node .github/scripts/publish-release.mjs "${{ steps.tag.outputs.tag }}"

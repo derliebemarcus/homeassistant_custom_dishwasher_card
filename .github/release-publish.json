@@ -1,0 +1,22 @@
+{
+  "version": {
+    "path": "package.json",
+    "property": "version"
+  },
+  "changelog_path": "CHANGELOG.md",
+  "required_workflows": [
+    "Validate HACS repository"
+  ],
+  "required_statuses": [
+    "continuous-integration/jenkins/branch"
+  ],
+  "timeout_seconds": 1200,
+  "asset": "dist/homeassistant_custom_dishwasher_card.js",
+  "npm": {
+    "enabled": true,
+    "verify_clean": [
+      "dist/homeassistant_custom_dishwasher_card.js"
+    ]
+  },
+  "floating_tags": null
+}
