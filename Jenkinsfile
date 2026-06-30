@@ -1,4 +1,4 @@
-@Library('jenkins-shared-library@main') _
+@Library('jenkins-shared-library@fix/card-profile-runtime-tools-7') _
 
 ciHomeAssistantCard(
     scm: scm,
