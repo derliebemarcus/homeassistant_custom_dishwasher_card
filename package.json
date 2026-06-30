@@ -18,5 +18,8 @@
   "engines": {
     "node": ">=24"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "qs": "6.15.2"
+  }
 }
