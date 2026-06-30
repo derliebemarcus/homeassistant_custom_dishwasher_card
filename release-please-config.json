@@ -5,7 +5,17 @@
       "release-type": "node",
       "package-name": "homeassistant_custom_dishwasher_card",
       "include-component-in-tag": false,
-      "include-v-in-tag": true
+      "include-v-in-tag": true,
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "src/homeassistant_custom_dishwasher_card.js"
+        },
+        {
+          "type": "generic",
+          "path": "dist/homeassistant_custom_dishwasher_card.js"
+        }
+      ]
     }
   }
 }
