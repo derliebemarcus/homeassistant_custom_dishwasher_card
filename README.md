@@ -2,7 +2,6 @@
 
 A standalone Home Assistant dashboard card for [Home Connect](https://www.home-assistant.io/integrations/home_connect/) dishwashers.
 
-
 <picture>
   <img src="docs/images/card-preview.png" height="600" alt="Dishwasher card preview" />
 </picture>
@@ -19,7 +18,7 @@ A standalone Home Assistant dashboard card for [Home Connect](https://www.home-a
 
 ## Compatibility
 
-This card has been tested with a **Siemens iQ300 dishwasher** using the Home Connect integration. It should also work with other Home Connect dishwashers that expose the corresponding standard entities. Available controls and status fields depend on the capabilities and enabled entities of the individual appliance.
+The supported minimum is **Home Assistant 2026.6.0 or newer**. The card has been tested with a **Siemens iQ300 dishwasher** using the Home Connect integration. It should also work with other Home Connect dishwashers that expose the corresponding standard entities. Available controls and status fields depend on the capabilities and enabled entities of the individual appliance.
 
 ## Installation
 
@@ -77,8 +76,9 @@ program_names:
 
 ## Requirements
 
-- Home Assistant with the [Home Connect](https://www.home-assistant.io/integrations/home_connect/) integration configured
-- The relevant entities must be enabled in the entity registry
+- Home Assistant 2026.6.0 or newer
+- The [Home Connect](https://www.home-assistant.io/integrations/home_connect/) integration configured
+- The relevant entities enabled in the entity registry
 
 ## Development
 
@@ -92,10 +92,10 @@ npm run build
 
 ## Release process
 
-1. Update `CHANGELOG.md` and the version in `package.json`.
-2. Run the Jenkins and GitHub Actions validation pipelines.
-3. Run the **Release** workflow with a semantic version such as `v0.2.0`.
-4. Confirm that the HACS validation workflow passes against the release.
+1. Merge releasable Conventional Commits into `main`.
+2. Release Please creates or updates the release pull request and keeps all version sources aligned.
+3. Merge the release pull request after Jenkins, HACS and Dependency Review are green.
+4. The resulting version tag publishes `dist/homeassistant_custom_dishwasher_card.js` as the GitHub release asset.
 
 ## Support
 
