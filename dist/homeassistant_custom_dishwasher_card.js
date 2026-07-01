@@ -1,5 +1,5 @@
 // x-release-please-start-version
-const VERSION = "0.4.1";
+const VERSION = "0.4.2";
 // x-release-please-end
 
 const SUFFIXES = {

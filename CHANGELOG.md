@@ -1,42 +1,43 @@
 # Changelog
 
+## 0.4.2
+
+### Patch Changes
+
+- 8d17115: Use Jenkins and Changesets for card releases.
+
 All notable changes to this project are documented in this file.
 
 ## [0.4.1](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.4.0...v0.4.1) (2026-07-01)
 
-
 ### Miscellaneous Chores
 
-* release migrated card baseline ([#23](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/issues/23)) ([070fd15](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/070fd154fb35145a42f8f6133272e97837f7e764))
+- release migrated card baseline ([#23](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/issues/23)) ([070fd15](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/070fd154fb35145a42f8f6133272e97837f7e764))
 
 ## [0.4.0](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.3.0...v0.4.0) (2026-06-27)
 
-
 ### Features
 
-* **ci:** add Jenkins card quality gate ([#9](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/issues/9)) ([8cbf096](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/8cbf09629d6ecda19cf18029b07893fddcd09832))
+- **ci:** add Jenkins card quality gate ([#9](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/issues/9)) ([8cbf096](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/8cbf09629d6ecda19cf18029b07893fddcd09832))
 
 ## [0.3.0](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.2.0...v0.3.0) (2026-06-27)
 
-
 ### Features
 
-* add Home Assistant card picker suggestions ([#14](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/issues/14)) ([f771ac2](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/f771ac28bcc6c578addc90ab4dbc97035fac1891))
+- add Home Assistant card picker suggestions ([#14](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/issues/14)) ([f771ac2](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/f771ac28bcc6c578addc90ab4dbc97035fac1891))
 
 ## [0.2.0](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.1.2...v0.2.0) (2026-06-26)
 
-
 ### Features
 
-* add Home Assistant card picker suggestions ([38ea65a](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/38ea65a19ffcc346b2dbbacf237512107bdfd407))
-* add Home Assistant card picker suggestions ([a96668a](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/a96668a7e1624ec61ecb4a200475fc61c57a3b78))
+- add Home Assistant card picker suggestions ([38ea65a](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/38ea65a19ffcc346b2dbbacf237512107bdfd407))
+- add Home Assistant card picker suggestions ([a96668a](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/a96668a7e1624ec61ecb4a200475fc61c57a3b78))
 
 ## [0.1.2](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.1.1...v0.1.2) (2026-06-25)
 
-
 ### Bug Fixes
 
-* **ci:** quote release label condition ([56f07da](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/56f07da7b71a3a980efd51f3002346f6d14cd0c8))
+- **ci:** quote release label condition ([56f07da](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/56f07da7b71a3a980efd51f3002346f6d14cd0c8))
 
 ## [0.1.1] - 2026-06-24
 

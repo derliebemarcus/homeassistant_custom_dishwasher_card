@@ -1,6 +1,6 @@
 {
   "name": "homeassistant_custom_dishwasher_card",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": true,
   "type": "module",
   "description": "A standalone Home Assistant card for Home Connect dishwashers.",
