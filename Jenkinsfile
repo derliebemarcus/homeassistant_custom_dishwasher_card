@@ -1,4 +1,4 @@
-@Library('jenkins-shared-library@main') _
+@Library('jenkins-shared-library@feat/jenkins-tag-release-publisher') _
 
 ciHomeAssistantCard(
     scm: scm,
@@ -53,4 +53,15 @@ ciHomeAssistantCard(
     homeAssistant: [
         enabled: true,
     ],
+)
+
+ciPublishGitHubReleaseAsset(
+    scm: scm,
+    agentLabel: 'klymene',
+    repository: [
+        owner: 'derliebemarcus',
+        name: 'homeassistant_custom_dishwasher_card',
+    ],
+    asset: 'dist/homeassistant_custom_dishwasher_card.js',
+    credentialId: 'github token',
 )
