@@ -1,4 +1,4 @@
-@Library('jenkins-shared-library@fix/immutable-release-publishing') _
+@Library('jenkins-shared-library@main') _
 
 ciHomeAssistantCard(
     scm: scm,
