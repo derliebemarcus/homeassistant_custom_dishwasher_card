@@ -7,7 +7,7 @@ const readme = await readFile("README.md", "utf8");
 const manifest = JSON.parse(await readFile("hacs.json", "utf8"));
 const packageJson = JSON.parse(await readFile("package.json", "utf8"));
 const packageLock = JSON.parse(await readFile("package-lock.json", "utf8"));
-const releaseManifest = JSON.parse(await readFile(".release-please-manifest.json", "utf8"));
+const changesetsConfig = JSON.parse(await readFile(".changeset/config.json", "utf8"));
 
 const supportedHomeAssistant = "2026.6.0";
 const versionPattern = /const VERSION = "([^"\n]+)";/;
@@ -23,7 +23,9 @@ assert.ok(readme.includes("Home Assistant " + supportedHomeAssistant + " or newe
 assert.match(packageJson.version, /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/);
 assert.equal(packageLock.version, packageJson.version);
 assert.equal(packageLock.packages[""].version, packageJson.version);
-assert.equal(releaseManifest["."], packageJson.version);
+assert.equal(changesetsConfig.baseBranch, "main");
+assert.equal(changesetsConfig.privatePackages.version, true);
+assert.equal(changesetsConfig.privatePackages.tag, false);
 assert.equal(sourceVersion, packageJson.version);
 assert.equal(distributionVersion, packageJson.version);
 
