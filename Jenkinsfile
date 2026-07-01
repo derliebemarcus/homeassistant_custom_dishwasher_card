@@ -1,4 +1,4 @@
-@Library('jenkins-shared-library@main') _
+@Library('jenkins-shared-library@fix/immutable-release-publishing') _
 
 ciHomeAssistantCard(
     scm: scm,
@@ -55,13 +55,16 @@ ciHomeAssistantCard(
     ],
 )
 
-ciPublishGitHubReleaseAsset(
+ciChangesetsRelease(
     scm: scm,
     agentLabel: 'klymene',
+    mainBranch: 'main',
     repository: [
         owner: 'derliebemarcus',
         name: 'homeassistant_custom_dishwasher_card',
     ],
     asset: 'dist/homeassistant_custom_dishwasher_card.js',
+    versionSyncCommand: 'npm run version:sync',
     credentialId: 'github token',
+    autoMergePatch: true,
 )
