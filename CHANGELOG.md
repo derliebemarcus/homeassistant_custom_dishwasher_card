@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.4.1](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.4.0...v0.4.1) (2026-07-01)
+
+
+### Miscellaneous Chores
+
+* release migrated card baseline ([#23](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/issues/23)) ([070fd15](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/commit/070fd154fb35145a42f8f6133272e97837f7e764))
+
 ## [0.4.0](https://github.com/derliebemarcus/homeassistant_custom_dishwasher_card/compare/v0.3.0...v0.4.0) (2026-06-27)
 
 
