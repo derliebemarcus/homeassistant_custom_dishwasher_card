@@ -54,3 +54,14 @@ ciHomeAssistantCard(
         enabled: true,
     ],
 )
+
+ciPublishGitHubReleaseAsset(
+    scm: scm,
+    agentLabel: 'klymene',
+    repository: [
+        owner: 'derliebemarcus',
+        name: 'homeassistant_custom_dishwasher_card',
+    ],
+    asset: 'dist/homeassistant_custom_dishwasher_card.js',
+    credentialId: 'github token',
+)
