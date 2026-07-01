@@ -1,4 +1,4 @@
-@Library('jenkins-shared-library@feat/jenkins-tag-release-publisher') _
+@Library('jenkins-shared-library@main') _
 
 ciHomeAssistantCard(
     scm: scm,
