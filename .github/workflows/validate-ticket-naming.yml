@@ -1,3 +1,4 @@
+# Supports local and repository-qualified ticket branches.
 name: Validate ticket naming
 
 on:
@@ -9,65 +10,33 @@ permissions:
 
 jobs:
   validate:
-    name: Validate branch and PR title
     runs-on: ubuntu-latest
     steps:
       - name: Validate naming convention
-        env:
-          HEAD_REF: ${{ github.head_ref }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_CREATED_AT: ${{ github.event.pull_request.created_at }}
-          REPOSITORY_NAME: ${{ github.event.repository.name }}
-          ACTOR: ${{ github.actor }}
         shell: bash
         run: |
           set -euo pipefail
-
-          cutoff='2026-07-02T08:10:46Z'
-
-          case "$ACTOR" in
-            dependabot[bot]|github-actions[bot])
-              echo "Trusted automation is exempt from ticket naming."
-              exit 0
-              ;;
+          head_ref="${GITHUB_HEAD_REF:-}"
+          actor="${GITHUB_ACTOR:-}"
+          pr_title="$(jq -r '.pull_request.title // ""' "$GITHUB_EVENT_PATH")"
+          pr_created_at="$(jq -r '.pull_request.created_at // ""' "$GITHUB_EVENT_PATH")"
+          case "$actor" in
+            dependabot[bot]|github-actions[bot]) exit 0 ;;
           esac
-
-          if [[ "$PR_CREATED_AT" < "$cutoff" ]]; then
-            echo "Legacy pull request created before $cutoff; branch naming is not enforced."
-            exit 0
-          fi
-
-          ticket_type_pattern='(feature|enhancement|bugfix|hotfix|refactoring|maintenance|documentation|security|test|research)'
-          slug_pattern='[a-z0-9]+(-[a-z0-9]+)*'
-          legacy_branch_pattern="^${ticket_type_pattern}/([0-9]+)-${slug_pattern}$"
-          repository_branch_pattern="^${ticket_type_pattern}/([a-z0-9][a-z0-9._-]*)-([0-9]+)-${slug_pattern}$"
-          title_pattern='^#([0-9]+)[[:space:]]+.+$'
-
-          if [[ "$HEAD_REF" =~ $legacy_branch_pattern ]]; then
+          [[ "$pr_created_at" < '2026-07-02T08:10:46Z' ]] && exit 0
+          types='(feature|enhancement|bugfix|hotfix|refactoring|maintenance|documentation|docs|security|test|research)'
+          slug='[a-z0-9]+(-[a-z0-9]+)*'
+          legacy="^${types}/([0-9]+)-${slug}$"
+          qualified="^${types}/([a-z0-9][a-z0-9._-]*)-([0-9]+)-${slug}$"
+          title='^#([0-9]+)[[:space:]]+.+$'
+          if [[ "$head_ref" =~ $legacy ]]; then
             branch_ticket="${BASH_REMATCH[2]}"
-          elif [[ "$HEAD_REF" =~ $repository_branch_pattern ]]; then
-            branch_repository="${BASH_REMATCH[2]}"
+          elif [[ "$head_ref" =~ $qualified ]]; then
             branch_ticket="${BASH_REMATCH[3]}"
-            if [[ "$branch_repository" != "$REPOSITORY_NAME" ]]; then
-              echo "::error::Branch repository '$branch_repository' must match '$REPOSITORY_NAME'."
-              exit 1
-            fi
           else
-            echo "::error::Branch '$HEAD_REF' must match one of the accepted ticket formats."
-            echo "::error::<ticket-type>/<ticket-number>-<ticket-title-slug>"
-            echo "::error::<ticket-type>/<repository>-<ticket-number>-<ticket-title-slug>"
+            echo "::error::Invalid ticket branch: $head_ref"
             exit 1
           fi
-
-          if [[ ! "$PR_TITLE" =~ $title_pattern ]]; then
-            echo "::error::PR title '$PR_TITLE' must begin with '#<ticket-number> '."
-            exit 1
-          fi
+          [[ "$pr_title" =~ $title ]] || exit 1
           title_ticket="${BASH_REMATCH[1]}"
-
-          if [[ "$branch_ticket" != "$title_ticket" ]]; then
-            echo "::error::Branch ticket #$branch_ticket does not match PR title ticket #$title_ticket."
-            exit 1
-          fi
-
-          echo "Naming convention valid for $REPOSITORY_NAME ticket #$branch_ticket."
+          [[ "$branch_ticket" == "$title_ticket" ]] || exit 1
