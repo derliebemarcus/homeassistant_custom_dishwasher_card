@@ -1,3 +1,4 @@
+# Supports local and repository-qualified ticket branches.
 name: Validate ticket naming
 
 on:
