@@ -1,4 +1,20 @@
-@Library('jenkins-shared-library@main') _
+@Library('jenkins-shared-library@feature/37-documentation-only-short-circuit') _
+
+if (ciDocumentationOnlyShortcut(
+    scm: scm,
+    agentLabel: 'klymene',
+    repository: [
+        owner: 'derliebemarcus',
+        name: 'homeassistant_custom_dishwasher_card',
+    ],
+    github: [
+        credentialId: 'github token',
+        statusContext: 'Continuous Integration / Jenkins',
+        title: 'Dishwasher Card Quality Gates',
+    ],
+)) {
+    return
+}
 
 ciHomeAssistantCard(
     scm: scm,
