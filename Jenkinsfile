@@ -1,5 +1,6 @@
 @Library('jenkins-shared-library@main') _
 
+// The documentation-only guard must execute before every project or release stage.
 if (ciDocumentationOnlyShortcut(
     scm: scm,
     agentLabel: 'klymene',
