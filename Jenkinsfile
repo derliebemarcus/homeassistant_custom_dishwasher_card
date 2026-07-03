@@ -1,4 +1,4 @@
-@Library('jenkins-shared-library@feature/37-documentation-only-short-circuit') _
+@Library('jenkins-shared-library@main') _
 
 if (ciDocumentationOnlyShortcut(
     scm: scm,
