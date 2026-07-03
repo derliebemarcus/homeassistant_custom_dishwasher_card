@@ -17,6 +17,7 @@ jobs:
           HEAD_REF: ${{ github.head_ref }}
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_CREATED_AT: ${{ github.event.pull_request.created_at }}
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
           ACTOR: ${{ github.actor }}
         shell: bash
         run: |
@@ -36,14 +37,27 @@ jobs:
             exit 0
           fi
 
-          branch_pattern='^(feature|enhancement|bugfix|hotfix|refactoring|maintenance|documentation|security|test|research)/([0-9]+)-[a-z0-9]+(-[a-z0-9]+)*$'
+          ticket_type_pattern='(feature|enhancement|bugfix|hotfix|refactoring|maintenance|documentation|security|test|research)'
+          slug_pattern='[a-z0-9]+(-[a-z0-9]+)*'
+          legacy_branch_pattern="^${ticket_type_pattern}/([0-9]+)-${slug_pattern}$"
+          repository_branch_pattern="^${ticket_type_pattern}/([a-z0-9][a-z0-9._-]*)-([0-9]+)-${slug_pattern}$"
           title_pattern='^#([0-9]+)[[:space:]]+.+$'
 
-          if [[ ! "$HEAD_REF" =~ $branch_pattern ]]; then
-            echo "::error::Branch '$HEAD_REF' must match <ticket-type>/<ticket-number>-<ticket-title-slug>."
+          if [[ "$HEAD_REF" =~ $legacy_branch_pattern ]]; then
+            branch_ticket="${BASH_REMATCH[2]}"
+          elif [[ "$HEAD_REF" =~ $repository_branch_pattern ]]; then
+            branch_repository="${BASH_REMATCH[2]}"
+            branch_ticket="${BASH_REMATCH[3]}"
+            if [[ "$branch_repository" != "$REPOSITORY_NAME" ]]; then
+              echo "::error::Branch repository '$branch_repository' must match '$REPOSITORY_NAME'."
+              exit 1
+            fi
+          else
+            echo "::error::Branch '$HEAD_REF' must match one of the accepted ticket formats."
+            echo "::error::<ticket-type>/<ticket-number>-<ticket-title-slug>"
+            echo "::error::<ticket-type>/<repository>-<ticket-number>-<ticket-title-slug>"
             exit 1
           fi
-          branch_ticket="${BASH_REMATCH[2]}"
 
           if [[ ! "$PR_TITLE" =~ $title_pattern ]]; then
             echo "::error::PR title '$PR_TITLE' must begin with '#<ticket-number> '."
@@ -56,4 +70,4 @@ jobs:
             exit 1
           fi
 
-          echo "Naming convention valid for ticket #$branch_ticket."
+          echo "Naming convention valid for $REPOSITORY_NAME ticket #$branch_ticket."
