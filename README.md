@@ -90,6 +90,9 @@ npm run build
 
 `npm run build` validates the source and writes the HACS distribution file.
 
+Detailed development, architecture, compatibility, and operational guidance is available
+in [docs/index.md](docs/index.md).
+
 ## Release process
 
 1. Merge releasable Conventional Commits into `main`.
