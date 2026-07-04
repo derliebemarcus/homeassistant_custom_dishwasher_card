@@ -3,6 +3,9 @@
 This documentation follows Diátaxis and Repository Documentation Standard v1. The
 repository declares the `library` profile in `.repository-documentation.yml`.
 
+Documentation-only pull requests are validated by the shared repository documentation
+contract and bypass project build, analysis, security, release, and publication stages.
+
 ## Sections
 
 - [First local run](tutorials/first-local-run.md)
