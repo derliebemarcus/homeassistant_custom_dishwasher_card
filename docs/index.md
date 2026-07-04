@@ -1,6 +1,7 @@
 # Home Connect Dishwasher Card documentation
 
-This documentation follows Diátaxis and Repository Documentation Standard v1.
+This documentation follows Diátaxis and Repository Documentation Standard v1. The
+repository declares the `library` profile in `.repository-documentation.yml`.
 
 ## Sections
 
