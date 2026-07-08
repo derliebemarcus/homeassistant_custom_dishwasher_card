@@ -8,6 +8,7 @@ const manifest = JSON.parse(await readFile("hacs.json", "utf8"));
 const packageJson = JSON.parse(await readFile("package.json", "utf8"));
 const packageLock = JSON.parse(await readFile("package-lock.json", "utf8"));
 const changesetsConfig = JSON.parse(await readFile(".changeset/config.json", "utf8"));
+const renovateConfig = JSON.parse(await readFile("renovate.json", "utf8"));
 
 const supportedHomeAssistant = "2026.6.0";
 const versionPattern = /const VERSION = "([^"\n]+)";/;
@@ -26,6 +27,17 @@ assert.equal(packageLock.packages[""].version, packageJson.version);
 assert.equal(changesetsConfig.baseBranch, "main");
 assert.equal(changesetsConfig.privatePackages.version, true);
 assert.equal(changesetsConfig.privatePackages.tag, false);
+assert.ok(renovateConfig.extends.includes("config:recommended"));
+assert.ok(
+  !renovateConfig.extends.some((preset) =>
+    preset.startsWith("local>derliebemarcus/maintenance"),
+  ),
+  "Renovate must not depend on the private maintenance preset",
+);
+assert.ok(
+  renovateConfig.packageRules.some((rule) => rule.matchManagers?.includes("npm")),
+  "Renovate must define npm update rules locally",
+);
 assert.equal(sourceVersion, packageJson.version);
 assert.equal(distributionVersion, packageJson.version);
 
