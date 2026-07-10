@@ -413,10 +413,12 @@ globalThis.customCards.push({
   preview: true,
   getEntitySuggestion: (hass, entityId) => {
     if (!matchesEntity(hass.states?.[entityId], ["dishwasher", "geschirrspuler", "geschirrspüler", "dishcare_dishwasher"])) return null;
+    const device_id = hass.entities?.[entityId]?.device_id;
+    if (!device_id) return null;
     return {
       config: {
         type: "custom:dishwasher-card",
-        entity: entityId,
+        device_id,
       },
     };
   },
