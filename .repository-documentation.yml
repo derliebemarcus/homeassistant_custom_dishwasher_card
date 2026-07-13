@@ -1,8 +1,61 @@
-documentation:
-  standard: repository-documentation
-  standard_version: 1
-  profile: library
-  architecture: arc42-lite
-  diagrams: c4
-  decisions: madr
-  publishing: none
+standard_version: 1
+ruleset_version: 1.1.0
+profile: library
+docs_roots:
+  - docs
+  - README.md
+required_documents:
+  - README.md
+  - CHANGELOG.md
+  - CONTRIBUTING.md
+  - SECURITY.md
+  - SUPPORT.md
+  - CODE_OF_CONDUCT.md
+  - LICENSE
+  - docs/index.md
+ignored_paths:
+  - coverage/
+  - reports/
+  - node_modules/
+  - "*.lock"
+maintenance:
+  require_impact_decision: true
+  mappings:
+    - source:
+        - src/**
+        - dist/**
+      documentation:
+        - README.md
+        - docs/reference/interfaces.md
+        - docs/reference/configuration.md
+        - docs/reference/compatibility.md
+        - docs/explanation/**
+    - source:
+        - package.json
+        - package-lock.json
+        - hacs.json
+      documentation:
+        - README.md
+        - docs/how-to/deployment.md
+        - docs/how-to/upgrade.md
+        - docs/reference/compatibility.md
+    - source:
+        - .changeset/**
+        - CHANGELOG.md
+        - scripts/sync-version.mjs
+      documentation:
+        - CHANGELOG.md
+        - docs/how-to/release.md
+        - docs/how-to/upgrade.md
+    - source:
+        - Jenkinsfile
+        - .github/workflows/**
+      documentation:
+        - docs/continuous-integration.md
+        - docs/how-to/release.md
+        - docs/operations/runbook.md
+    - source:
+        - .repository-documentation.yml
+        - .github/pull_request_template.md
+      documentation:
+        - docs/continuous-integration.md
