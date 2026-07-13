@@ -1,0 +1,101 @@
+name: Issue Status Sync
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened, closed]
+
+jobs:
+  sync:
+    name: Sync issue status
+    runs-on: ubuntu-latest
+    steps:
+      - name: Synchronize issue status
+        env:
+          FORGEJO_API_URL: ${{ forgejo.api_url }}
+          FORGEJO_TOKEN: ${{ forgejo.token }}
+          FORGEJO_REPOSITORY: ${{ forgejo.repository }}
+          FORGEJO_EVENT_PATH: ${{ forgejo.event_path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require("fs");
+          const apiUrl = process.env.FORGEJO_API_URL.replace(/\/$/, "");
+          const token = process.env.FORGEJO_TOKEN;
+          const repository = process.env.FORGEJO_REPOSITORY;
+          const payload = JSON.parse(fs.readFileSync(process.env.FORGEJO_EVENT_PATH, "utf8"));
+          const pullRequest = payload.pull_request;
+          const branchPattern = /^[a-z][a-z0-9-]*\/(?:(?<repository>[a-z0-9][a-z0-9._-]*)-)?(?<number>[1-9][0-9]*)-[a-z0-9][a-z0-9-]*$/;
+          const titlePattern = /^#(?<number>[1-9][0-9]*)\s+.+$/;
+
+          async function request(method, path, body) {
+            const response = await fetch(`${apiUrl}${path}`, {
+              method,
+              headers: {
+                Accept: "application/json",
+                Authorization: `token ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: body === undefined ? undefined : JSON.stringify(body),
+            });
+            const text = await response.text();
+            if (!response.ok) {
+              throw new Error(`${method} ${path} failed: ${response.status} ${text}`);
+            }
+            return text ? JSON.parse(text) : null;
+          }
+
+          function pullMatches(item, issueNumber, branchRef) {
+            if (branchRef && item.head?.ref === branchRef) return true;
+            const titleNumber = item.title?.match(titlePattern)?.groups?.number;
+            const branchNumber = item.head?.ref?.match(branchPattern)?.groups?.number;
+            return titleNumber === String(issueNumber) || branchNumber === String(issueNumber);
+          }
+
+          async function main() {
+            if (!pullRequest) return;
+            const [owner, repositoryName] = repository.split("/", 2);
+            const repositoryPath = `${encodeURIComponent(owner)}/${encodeURIComponent(repositoryName)}`;
+            const branchRef = pullRequest.head?.ref ?? "";
+            const branchMatch = branchRef.match(branchPattern);
+            const titleMatch = (pullRequest.title ?? "").match(titlePattern);
+            const branchRepository = branchMatch?.groups?.repository ?? repositoryName;
+            const branchNumber = branchMatch?.groups?.number;
+            const titleNumber = titleMatch?.groups?.number;
+
+            if (!branchMatch && !titleMatch) return;
+            if (branchRepository !== repositoryName) return;
+            if (branchNumber && titleNumber && branchNumber !== titleNumber) {
+              throw new Error(`Branch ticket #${branchNumber} does not match PR title #${titleNumber}.`);
+            }
+
+            const issueNumber = Number(branchNumber ?? titleNumber);
+            const issuePath = `/repos/${repositoryPath}/issues/${issueNumber}`;
+            const action = payload.action;
+
+            if (["opened", "edited", "synchronize", "reopened"].includes(action)) {
+              const issue = await request("GET", issuePath);
+              for (const label of issue.labels ?? []) {
+                if (label.name?.startsWith("status:")) {
+                  await request("DELETE", `${issuePath}/labels/${label.id}`);
+                }
+              }
+              const labels = await request("GET", `/repos/${repositoryPath}/labels?limit=100`);
+              const inProgress = labels.find((label) => label.name === "status:in-progress");
+              if (!inProgress) throw new Error("Repository label 'status:in-progress' does not exist.");
+              await request("PATCH", issuePath, { state: "open" });
+              await request("POST", `${issuePath}/labels`, { labels: [inProgress.id] });
+              return;
+            }
+
+            if (action !== "closed" || pullRequest.merged !== true) return;
+            const openPulls = await request("GET", `/repos/${repositoryPath}/pulls?state=open&limit=100`);
+            if (openPulls.some((item) => pullMatches(item, issueNumber, branchRef))) return;
+            await request("PATCH", issuePath, { state: "closed" });
+          }
+
+          main().catch((error) => {
+            console.error(error);
+            process.exitCode = 1;
+          });
+          NODE
