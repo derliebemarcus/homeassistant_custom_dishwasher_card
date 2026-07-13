@@ -15,6 +15,10 @@ ciRepositoryPipeline(
     ],
     features: [
         documentationOnly: [enabled: true],
+        repositoryDocumentation: [
+            enabled: true,
+            validatorVersion: '1.1.1',
+        ],
     ],
     profileConfig: [
         mainBranch: 'main',
