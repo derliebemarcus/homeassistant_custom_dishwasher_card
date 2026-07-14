@@ -50,13 +50,23 @@ ciHomeAssistantCard(
     coveralls: [
         credentialId: 'Coveralls',
     ],
+    commands: [
+        actionlint: '''
+            test -n "$(find .forgejo/workflows -type f \
+              \( -name '*.yml' -o -name '*.yaml' \) -print -quit)"
+            find .forgejo/workflows -type f \
+              \( -name '*.yml' -o -name '*.yaml' \) \
+              -exec podman run --rm -v "$PWD:/repo:z" -w /repo \
+                docker.io/rhysd/actionlint:latest {} +
+        ''',
+    ],
     security: [
         gitleaks: [enabled: true],
         trivy: [enabled: true],
         codeql: [
             enabled: true,
             toolName: 'codeql',
-            languages: ['javascript-typescript', 'actions'],
+            languages: ['javascript-typescript'],
         ],
         osv: [enabled: true],
         actionlint: [enabled: true],
