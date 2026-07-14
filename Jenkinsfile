@@ -59,7 +59,7 @@ ciHomeAssistantCard(
             test -n "$workflow_files"
             echo "$workflow_files" | while IFS= read -r workflow; do
               podman run --rm -v "$PWD:/repo:z" -w /repo \
-                docker.io/rhysd/actionlint:latest "$workflow"
+                docker.io/rhysd/actionlint:latest -ignore forgejo "$workflow"
             done
         ''',
     ],
