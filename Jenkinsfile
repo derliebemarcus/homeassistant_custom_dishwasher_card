@@ -3,6 +3,11 @@
 ciRepositoryDocumentationContract(
     scm: scm,
     agentLabel: 'klymene',
+    repository: [
+        provider: 'forgejo',
+        owner: 'siczb',
+        name: 'homeassistant_custom_dishwasher_card',
+    ],
 )
 
 // The documentation-only guard must execute before every project or release stage.
