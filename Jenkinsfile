@@ -1,4 +1,4 @@
-@Library('jenkins-shared-library@feature/100-first-consumer-profiles') _
+@Library('jenkins-shared-library@main') _
 
 ciRepositoryPipeline(
     profile: 'homeassistant-card',
