@@ -63,11 +63,17 @@ jobs:
             entry.integrity = "sha512-8JnbkQ4juDyvYs4mgFGQqg4yCYtFDtUtmp2QIQq11ZZe5CFQ5wcqm1rqDgAh/QdMySuBnPzMUiJUNZG5N/AiQw==";
 
             const content = Buffer.from(`${JSON.stringify(lock, null, 2)}\n`).toString("base64");
+            const identity = {
+              name: "Forgejo Actions",
+              email: "forgejo-actions@noreply.git.home.siczb.de",
+            };
             await request("PUT", `${apiUrl}/repos/${repository}/contents/${path}`, {
               branch,
               sha: file.sha,
               message: "chore(deps): resolve fast-uri 3.1.4",
               content,
+              author: identity,
+              committer: identity,
             });
             console.log("Updated fast-uri lockfile entry to 3.1.4.");
           }
