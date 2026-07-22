@@ -3,6 +3,9 @@ name: Refresh fast-uri lockfile
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   refresh:
     name: Refresh lockfile entry
