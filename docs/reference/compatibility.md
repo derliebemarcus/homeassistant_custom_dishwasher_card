@@ -9,9 +9,10 @@ The card is verified with a Siemens iQ300 dishwasher. Other Home Connect dishwas
 supported when they expose compatible standard entities. Current Chrome, Firefox, Edge,
 and Safari releases are expected; obsolete browsers are not supported.
 
-Dependency compatibility is maintained through npm overrides. The development toolchain
-pins `qs` to `6.15.3`; this internal maintenance update requires no Home Assistant
-configuration changes.
+Dependency compatibility is maintained through npm overrides and the npm lockfile. The
+development toolchain pins `qs` to `6.15.3` and resolves `fast-uri` to `3.1.4` to satisfy
+the current high-severity audit gate. These internal maintenance updates require no Home
+Assistant configuration changes.
 
 Breaking configuration or entity-contract changes require a major release and migration
 notes in the changelog.
