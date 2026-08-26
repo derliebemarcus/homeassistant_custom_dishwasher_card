@@ -109,6 +109,65 @@ test("prefers an active program and formats program labels", () => {
   assert.equal(card._program(), "");
 });
 
+test("prefers Home Assistant translations for program labels", () => {
+  const entities = {
+    activeProgram: "sensor.dishwasher_active",
+    selectedProgram: "select.dishwasher_selected",
+  };
+  const states = {
+    "sensor.dishwasher_active": entityState("dishcare_dishwasher_program_quick_65"),
+    "select.dishwasher_selected": entityState("dishcare_dishwasher_program_quick_65"),
+  };
+  const card = createCard({ entities, states });
+  card._hass.formatEntityState = (_state, value) =>
+    value === "dishcare_dishwasher_program_quick_65" ? "Quick 65 °C" : value;
+
+  assert.equal(
+    card._programLabel("dishcare_dishwasher_program_quick_65"),
+    "Quick 65 °C",
+  );
+
+  // An explicit mapping wins over the Home Assistant translation.
+  card._config.program_names = {
+    dishcare_dishwasher_program_quick_65: "Express",
+  };
+  assert.equal(
+    card._programLabel("dishcare_dishwasher_program_quick_65"),
+    "Express",
+  );
+});
+
+test("maps program overrides keyed by the displayed name", () => {
+  const entities = { selectedProgram: "select.dishwasher_selected" };
+  const states = {
+    "select.dishwasher_selected": entityState("dishcare_dishwasher_program_quick_65"),
+  };
+  const card = createCard({
+    entities,
+    states,
+    config: { program_names: { "Schnell 65 °C": "Quick 65 °C" } },
+  });
+
+  assert.equal(
+    card._programLabel("dishcare_dishwasher_program_quick_65"),
+    "Quick 65 °C",
+  );
+});
+
+test("falls back to the raw value when no translation resolves it", () => {
+  const entities = { selectedProgram: "select.dishwasher_selected" };
+  const states = { "select.dishwasher_selected": entityState("Schnell 65 °C") };
+  const card = createCard({
+    entities,
+    states,
+    config: { program_names: { "Schnell 65 °C": "Quick 65 °C" } },
+  });
+  card._hass.formatEntityState = (_state, value) => value;
+
+  assert.equal(card._programLabel("Schnell 65 °C"), "Quick 65 °C");
+  assert.equal(card._programLabel("Maschinenpflege"), "Maschinenpflege");
+});
+
 test("formats valid finish times and rejects invalid values", () => {
   const entities = { finish: "sensor.dishwasher_finish" };
   const card = createCard({

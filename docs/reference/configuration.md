@@ -7,8 +7,10 @@ type: custom:dishwasher-card
 device_id: 0123456789abcdef0123456789abcdef
 ```
 
-Optional keys include `title`, `accent_color`, `show_program`, `show_delay`,
+Optional keys include `title`, `accent_color`, `language`, `show_program`, `show_delay`,
 `show_options`, `program_names`, and explicit entity mappings below `entities`.
+
+`language` pins the card's own labels to `de` or `en`; without it the Home Assistant frontend language is used.
 
 Device-based discovery is preferred. Explicit entity IDs may be supplied when Home
 Connect naming or registry behavior requires an override. Unknown optional entities are
