@@ -21,14 +21,26 @@ const SUFFIXES = {
   stop: ["_stop_program"],
 };
 
-const DEFAULT_PROGRAMS = {
-  dishcare_dishwasher_program_intensiv_70: "Intensiv 70 °C",
-  dishcare_dishwasher_program_auto_2: "Auto",
-  dishcare_dishwasher_program_eco_50: "Eco 50 °C",
-  dishcare_dishwasher_program_quick_45: "Schnell 45 °C",
-  dishcare_dishwasher_program_pre_rinse: "Vorspülen",
-  dishcare_dishwasher_program_quick_65: "Schnell 65 °C",
-  dishcare_dishwasher_program_machine_care: "Maschinenpflege",
+// Fallback names, used only when Home Assistant has no translation for the option.
+const PROGRAM_NAMES = {
+  de: {
+    dishcare_dishwasher_program_intensiv_70: "Intensiv 70 °C",
+    dishcare_dishwasher_program_auto_2: "Auto",
+    dishcare_dishwasher_program_eco_50: "Eco 50 °C",
+    dishcare_dishwasher_program_quick_45: "Schnell 45 °C",
+    dishcare_dishwasher_program_pre_rinse: "Vorspülen",
+    dishcare_dishwasher_program_quick_65: "Schnell 65 °C",
+    dishcare_dishwasher_program_machine_care: "Maschinenpflege",
+  },
+  en: {
+    dishcare_dishwasher_program_intensiv_70: "Intensive 70 °C",
+    dishcare_dishwasher_program_auto_2: "Auto",
+    dishcare_dishwasher_program_eco_50: "Eco 50 °C",
+    dishcare_dishwasher_program_quick_45: "Quick 45 °C",
+    dishcare_dishwasher_program_pre_rinse: "Pre-rinse",
+    dishcare_dishwasher_program_quick_65: "Quick 65 °C",
+    dishcare_dishwasher_program_machine_care: "Machine care",
+  },
 };
 
 const TEXT = {
@@ -158,7 +170,8 @@ class DishwasherCard extends HTMLElement {
   getGridOptions() { return { columns: 12, min_columns: 6, rows: 5, min_rows: 4 }; }
 
   get _language() {
-    const language = this._hass?.locale?.language || this._hass?.language || "de";
+    const language =
+      this._config?.language || this._hass?.locale?.language || this._hass?.language || "de";
     return String(language).toLowerCase().startsWith("de") ? "de" : "en";
   }
 
@@ -231,10 +244,27 @@ class DishwasherCard extends HTMLElement {
     return invalid.includes(selected) ? "" : selected;
   }
 
+  // Home Assistant ships Home Connect programme translations for the frontend language;
+  // formatEntityState resolves them and returns the raw value when none exists.
+  _translatedProgram(value) {
+    for (const key of ["selectedProgram", "activeProgram"]) {
+      const state = this._state(key);
+      const label = state && this._hass?.formatEntityState?.(state, value);
+      if (label && label !== value) return label;
+    }
+    return "";
+  }
+
   _programLabel(value) {
     if (!value) return this._text.noProgram;
-    const names = { ...DEFAULT_PROGRAMS, ...(this._config.program_names || {}) };
-    return names[value] || value.replace(/^dishcare_dishwasher_program_/, "").replaceAll("_", " ");
+    const overrides = this._config.program_names || {};
+    if (overrides[value]) return overrides[value];
+    const label =
+      this._translatedProgram(value) ||
+      PROGRAM_NAMES[this._language][value] ||
+      value.replace(/^dishcare_dishwasher_program_/, "").replaceAll("_", " ");
+    // Overrides may also be keyed by the displayed name, e.g. "Schnell 65 °C": "Quick 65 °C".
+    return overrides[label] || label;
   }
 
   _finish() {

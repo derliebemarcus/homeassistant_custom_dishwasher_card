@@ -13,7 +13,7 @@ A standalone Home Assistant dashboard card for [Home Connect](https://www.home-a
 - Programme selection, start-delay presets and dishwasher options
 - Power-on and confirmed programme-stop actions
 - Responsive layout with reduced-motion support
-- German and English labels
+- German and English labels, with programme names translated by Home Assistant
 - No frontend-card dependencies
 
 ## Compatibility
@@ -67,11 +67,34 @@ Optional settings:
 type: custom:dishwasher-card
 device_id: 0123456789abcdef0123456789abcdef
 accent_color: var(--primary-color)
+language: en
 show_program: true
 show_delay: true
 show_options: true
 program_names:
   dishcare_dishwasher_program_auto_2: Auto
+```
+
+### Programme names
+
+Programme names come from Home Assistant itself: the card asks the frontend to format the
+`select`/`sensor` state, so the Home Connect integration's own translations are used in the
+language configured in Home Assistant. Only when Home Assistant has no translation for an
+option does the card fall back to its built-in name list, and then to the prettified raw value.
+
+`language` forces the card's own labels (`de` or `en`) instead of following the Home Assistant
+frontend language. It does not affect programme names, which Home Assistant translates.
+
+`program_names` overrides individual programmes and takes precedence over every other source.
+Keys may be either the raw entity state or the name the card would display:
+
+```yaml
+program_names:
+  # by raw state
+  dishcare_dishwasher_program_quick_65: Quick 65 °C
+  # by displayed name
+  Maschinenpflege: Machine care
+  Vorspülen: Pre-rinse
 ```
 
 ## Requirements
