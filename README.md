@@ -22,6 +22,8 @@ The supported minimum is **Home Assistant 2026.6.0 or newer**. The card has been
 
 ## Installation
 
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=derliebemarcus&repository=homeassistant_custom_dishwasher_card&category=plugin)
+
 ### HACS
 
 1. Open HACS.
