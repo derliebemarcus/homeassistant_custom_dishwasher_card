@@ -59,6 +59,21 @@ test("discovers matching Home Connect entities and recovers from registry errors
         entity_id: "switch.kitchen_hygiene",
       },
       {
+        device_id: "device-1",
+        platform: "homeconnect_ws",
+        entity_id: "binary_sensor.kitchen_connection",
+      },
+      {
+        device_id: "device-1",
+        platform: "homeconnect_ws",
+        entity_id: "sensor.kitchen_remaining_program_time",
+      },
+      {
+        device_id: "device-1",
+        platform: "homeconnect_ws",
+        entity_id: "switch.kitchen_extra_dry_option",
+      },
+      {
         di: "device-1",
         pl: "lg_thinq",
         ei: "sensor.ignored_program_progress",
@@ -74,9 +89,12 @@ test("discovers matching Home Connect entities and recovers from registry errors
   await card._discover();
 
   assert.deepEqual(card._entities, {
+    connectivity: "binary_sensor.kitchen_connection",
     operation: "sensor.kitchen_operation_state",
+    remainingTime: "sensor.kitchen_remaining_program_time",
     selectedProgram: "select.kitchen_selected_program",
     hygiene: "switch.kitchen_hygiene",
+    extraDry: "switch.kitchen_extra_dry_option",
   });
   assert.equal(card._discovering, false);
 
