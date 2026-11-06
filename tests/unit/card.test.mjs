@@ -94,7 +94,7 @@ test("prefers an active program and formats program labels", () => {
   assert.equal(card._program(), "dishcare_dishwasher_program_eco_50");
   assert.equal(
     card._programLabel("dishcare_dishwasher_program_eco_50"),
-    "Eco 50 °C",
+    "Eco 50°",
   );
 
   card._hass.states["sensor.dishwasher_active"] = entityState("none");
@@ -215,6 +215,92 @@ test("renders loading, missing and populated card states", () => {
 
   assert.match(card.shadowRoot.innerHTML, /Test dishwasher/);
   assert.match(card.shadowRoot.innerHTML, /55%/);
-  assert.match(card.shadowRoot.innerHTML, /Eco 50 °C/);
+  assert.match(card.shadowRoot.innerHTML, /Eco 50°/);
   assert.match(card.shadowRoot.innerHTML, /Hygiene\+/);
+});
+
+
+test("supports current Home Connect Local program identifiers", () => {
+  const card = createCard({ language: "en-US" });
+
+  assert.equal(card._programLabel("favorite_001"), "Favorite");
+  assert.equal(card._programLabel("dishcare_dishwasher_program_auto2"), "Auto");
+  assert.equal(card._programLabel("dishcare_dishwasher_program_eco50"), "Eco 50°");
+  assert.equal(card._programLabel("dishcare_dishwasher_program_intensiv70"), "Intensive 70°");
+  assert.equal(card._programLabel("dishcare_dishwasher_program_machinecare"), "Machine Care");
+  assert.equal(card._programLabel("dishcare_dishwasher_program_prerinse"), "Pre Rinse");
+  assert.equal(card._programLabel("dishcare_dishwasher_program_quick65"), "Quick 65°");
+});
+
+test("normalizes binary door states from Home Connect Local", () => {
+  const entities = { door: "binary_sensor.dishwasher_door" };
+  const card = createCard({
+    language: "en-US",
+    entities,
+    states: { "binary_sensor.dishwasher_door": entityState("on") },
+  });
+
+  assert.equal(card._door().label, "Door open");
+  card._hass.states["binary_sensor.dishwasher_door"] = entityState("off");
+  assert.equal(card._door().label, "Door closed");
+});
+
+test("formats remaining time and calculates a finish fallback", () => {
+  const entities = { remainingTime: "sensor.dishwasher_remaining_program_time" };
+  const card = createCard({
+    language: "en-US",
+    entities,
+    states: {
+      "sensor.dishwasher_remaining_program_time": entityState("3.75", {
+        unit_of_measurement: "h",
+      }),
+    },
+  });
+
+  assert.equal(card._remaining(), "3 h 45 min");
+  assert.match(card._finish(), /^\d{2}:\d{2}$/);
+
+  card._hass.states["sensor.dishwasher_remaining_program_time"] = entityState("13500", {
+    unit_of_measurement: "s",
+  });
+  assert.equal(card._remaining(), "3 h 45 min");
+});
+
+test("renders Home Connect Local maintenance statuses only when enabled", () => {
+  const entities = {
+    salt: "sensor.dishwasher_salt",
+    rinseAid: "sensor.dishwasher_rinse_aid",
+    smartFilter: "binary_sensor.dishwasher_smart_filter_cleaning",
+    machineCareRemainingRuns: "sensor.dishwasher_machinecare_remaining_runs",
+  };
+  const states = {
+    "sensor.dishwasher_salt": entityState("nearly_empty"),
+    "sensor.dishwasher_rinse_aid": entityState("full"),
+    "binary_sensor.dishwasher_smart_filter_cleaning": entityState("on"),
+    "sensor.dishwasher_machinecare_remaining_runs": entityState("28"),
+  };
+
+  const hidden = createCard({ language: "en-US", entities, states });
+  assert.equal(hidden._maintenance(), "");
+
+  const card = createCard({
+    language: "en-US",
+    entities,
+    states,
+    config: { show_maintenance: true },
+  });
+  const html = card._maintenance();
+  assert.match(html, /Maintenance/);
+  assert.match(html, /Refill soon/);
+  assert.match(html, /Clean filter/);
+  assert.match(html, />28</);
+});
+
+test("includes Extra Dry in program option controls", () => {
+  const entities = { extraDry: "switch.dishwasher_extra_dry_option" };
+  const states = { "switch.dishwasher_extra_dry_option": entityState("on") };
+  const card = createCard({ language: "en-US", entities, states });
+
+  assert.match(card._optionControls(), /Extra Dry/);
+  assert.match(card._optionControls(), /active/);
 });
