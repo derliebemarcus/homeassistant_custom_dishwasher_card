@@ -16,3 +16,10 @@ Assistant configuration changes.
 
 Breaking configuration or entity-contract changes require a major release and migration
 notes in the changelog.
+
+## Home Assistant 2026.11 qualification
+
+Card suggestions no longer read the deprecated `friendly_name` state attribute and
+use device/entity registry metadata with fallback to entity IDs. Unit tests cover
+missing `friendly_name` and unavailable registry entries. Full browser validation
+against the actual Home Assistant 2026.11 frontend remains required before release.
