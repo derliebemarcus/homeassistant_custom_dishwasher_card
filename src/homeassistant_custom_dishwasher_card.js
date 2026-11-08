@@ -400,10 +400,19 @@ class DishwasherCard extends HTMLElement {
 
 if (!customElements.get("dishwasher-card")) customElements.define("dishwasher-card", DishwasherCard);
 globalThis.customCards = globalThis.customCards || [];
-const matchesEntity = (entity, terms) => {
-  const entityId = String(entity?.entity_id || entity || "").toLowerCase();
-  const name = String(entity?.attributes?.friendly_name || entity?.name || "").toLowerCase();
-  return terms.some((term) => entityId.includes(term) || name.includes(term));
+const matchesEntity = (hass, entityId, terms) => {
+  const entity = hass.states?.[entityId];
+  const registryEntry = hass.entities?.[entityId];
+  const device = hass.devices?.[registryEntry?.device_id];
+  const identifiers = [
+    entityId,
+    registryEntry?.name,
+    registryEntry?.original_name,
+    device?.name_by_user,
+    device?.name,
+  ].filter(Boolean).map((value) => String(value).toLowerCase());
+  return terms.some((term) => identifiers.some((name) => name.includes(term))) &&
+    Boolean(entity && registryEntry?.device_id);
 };
 
 globalThis.customCards.push({
@@ -412,7 +421,7 @@ globalThis.customCards.push({
   description: "Home Connect dishwasher control card",
   preview: true,
   getEntitySuggestion: (hass, entityId) => {
-    if (!matchesEntity(hass.states?.[entityId], ["dishwasher", "geschirrspuler", "geschirrspüler", "dishcare_dishwasher"])) return null;
+    if (!matchesEntity(hass, entityId, ["dishwasher", "geschirrspuler", "geschirrspüler", "dishcare_dishwasher"])) return null;
     const device_id = hass.entities?.[entityId]?.device_id;
     if (!device_id) return null;
     return {
