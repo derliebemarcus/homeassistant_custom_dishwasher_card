@@ -14,13 +14,14 @@
     "version:sync": "node scripts/sync-version.mjs && npm install --package-lock-only --ignore-scripts && npm run build && node tests/validate.mjs"
   },
   "devDependencies": {
-    "@stryker-mutator/core": "9.6.1"
+    "@stryker-mutator/core": "10.1.1"
   },
   "engines": {
     "node": ">=24"
   },
   "license": "MIT",
   "overrides": {
-    "qs": "6.15.3"
+    "qs": "6.17.1",
+    "minimatch": "11.0.5"
   }
 }
