@@ -11,7 +11,7 @@ A standalone Home Assistant dashboard card for [Home Connect](https://www.home-a
 - Automatic Home Connect entity discovery from a Home Assistant `device_id`
 - Operation state, programme, progress, finish time, connectivity, remote-start and door status
 - Programme selection, start-delay presets and dishwasher options
-- Power-on and confirmed programme-stop actions
+- Power-on, explicit programme-start and confirmed programme-stop actions
 - Responsive layout with reduced-motion support
 - German and English labels
 - No frontend-card dependencies
@@ -57,8 +57,11 @@ entities:
   progress: sensor.geschirrspuler_program_progress
   finish: sensor.geschirrspuler_program_finish_time
   selectedProgram: select.geschirrspuler_selected_program
+  activeProgram: select.geschirrspuler_active_program
   door: sensor.geschirrspuler_door
   connectivity: binary_sensor.geschirrspuler_connectivity
+  remoteStart: binary_sensor.geschirrspuler_remote_start
+  power: switch.geschirrspuler_power
 ```
 
 Optional settings:
@@ -73,6 +76,14 @@ show_options: true
 program_names:
   dishcare_dishwasher_program_auto_2: Auto
 ```
+
+After powering on, choose the programme and press **Start program**. Choosing a programme
+does not start the wash. Start uses Home Connect's **Active program** select and requires
+enabled remote start, a closed/locked door and ready/finished operation. Missing
+prerequisites are explained below the disabled button. See
+[starting a wash](docs/reference/configuration.md#starting-a-wash) for details.
+
+<img src="docs/images/start-ready.png" width="350" alt="Synthetic preview with an explicit Start program button after power-on" />
 
 ## Requirements
 
