@@ -225,9 +225,9 @@ class DishwasherCard extends HTMLElement {
 
   _program() {
     const invalid = ["", "unknown", "unavailable", "none"];
-    const active = this._state("activeProgram")?.state || "";
+    const active = String(this._state("activeProgram")?.state || "").trim().toLowerCase();
     if (!invalid.includes(active)) return active;
-    const selected = this._state("selectedProgram")?.state || "";
+    const selected = String(this._state("selectedProgram")?.state || "").trim().toLowerCase();
     return invalid.includes(selected) ? "" : selected;
   }
 
@@ -238,7 +238,7 @@ class DishwasherCard extends HTMLElement {
   }
 
   _finish() {
-    const value = this._state("finish")?.state;
+    const value = String(this._state("finish")?.state || "").trim().toLowerCase();
     if (!value || ["unknown", "unavailable", "none"].includes(value)) return "";
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return "";
@@ -249,7 +249,7 @@ class DishwasherCard extends HTMLElement {
   }
 
   _door() {
-    const state = this._state("door")?.state;
+    const state = String(this._state("door")?.state || "").trim().toLowerCase();
     if (state === "open") return { label: this._text.open, icon: "mdi:door-open", tone: "warning" };
     if (state === "locked") return { label: this._text.locked, icon: "mdi:door-closed-lock", tone: "good" };
     return { label: this._text.closed, icon: "mdi:door-closed", tone: "muted" };
